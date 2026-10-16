@@ -1,0 +1,53 @@
+REGISTRO DE AUSENTES — BETA 0.3
+================================
+
+ABRIR
+Haz doble clic en index.html. Funciona sin internet y sin instalar programas.
+Conserva todos los archivos y la carpeta assets juntos.
+
+CAMBIOS
+- Archivo 013 abre directamente la grabación y empieza a reproducirla.
+- Demo de vigilancia animada de 12 segundos con interferencias.
+  Es una reconstrucción local en canvas, no una cámara real ni un video filmado.
+- A los 120 segundos de pestaña activa con efectos: toma total de la pantalla.
+- 36 fotografías en movimiento, repitiendo los tres retratos de prueba.
+- SAL DE AQUÍ / Eres el siguiente...
+- El final no tiene botones y Escape no lo cierra. El resto del sitio queda inactivo.
+  Para volver al inicio, recarga o cierra y vuelve a abrir la página.
+
+PROBAR
+1. Pulsa el 013 de la portada. Mira la puerta durante los 12 segundos del fragmento.
+2. Cierra la grabación o vuelve a reproducirla.
+3. Permanece en la pestaña con efectos encendidos durante dos minutos.
+4. En el final, recarga la página para empezar de nuevo.
+El reloj se pausa si cambias de pestaña. Antes del final, Escape cierra los diálogos.
+Apagar efectos pausa el avance de las interferencias. El reloj de sesión continúa.
+Si tu sistema tiene movimiento reducido, los efectos empiezan apagados.
+El sonido empieza apagado. El final detiene cualquier reproducción de audio.
+
+AGREGAR SUS FOTOS
+Guarda las fotos en assets. En config.js agrega entradas a la lista caras:
+  { src: 'assets/cara-04.jpg' }
+Se alternarán automáticamente entre los 36 retratos del final.
+Las tres entradas actuales recortan partes de la lámina assets/retratos.png.
+
+PONER SU VIDEO EN EL 013
+Guarda su video como assets/archivo-013.mp4.
+En config.js cambia video013 a 'assets/archivo-013.mp4'.
+Al dejar video013 vacío se utiliza la simulación de prueba.
+Los efectos de interferencia también se aplican al video que agreguen.
+
+PERSONALIZAR
+config.js: evento, fotos, video y tiempos de las anomalías (hackeo: 120).
+index.html: portada y tarjetas. app.js: expedientes y simulación del pasillo.
+styles.css: diseño y efectos. assets/static.svg: textura de interferencia.
+Enlaces directos: index.html#exp-001, #exp-002, #exp-003 y #exp-013.
+
+Los datos reales del evento siguen pendientes. Los personajes son ficticios adultos.
+Retratos generados con image_gen; prompt en PROMPT-IMAGEN.txt.
+Los efectos no acceden a cámara, micrófono, ubicación ni archivos del visitante.
+Sin librerías, fuentes externas, cuentas ni claves.
+
+COMPARTIR
+Envía toda la carpeta o el ZIP. Un enlace público y los códigos QR requieren
+alojarla después en un servicio web. Esta entrega es local.

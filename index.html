@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111210">
+  <meta name="description" content="Registro de Ausentes. Una experiencia de ficción para una casa del terror escolar.">
+  <title>Registro de Ausentes — Archivo recuperado</title>
+  <link rel="icon" href="assets/sello.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script src="config.js" defer></script><script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#expedientes">Ir al archivo</a>
+  <div class="scanlines" aria-hidden="true"></div><div class="signal-damage" aria-hidden="true"><i></i><i></i><i></i><span>NO HAY SEÑAL</span></div>
+  <header class="systembar"><a class="brand" href="#inicio"><img src="assets/sello.svg" alt="" width="25" height="25"> RDA<span> / RED DE ARCHIVOS</span></a><span class="connection"><i></i> CONEXIÓN INESTABLE</span><span class="version">TERMINAL 04 / BETA 0.3</span></header>
+  <div class="shell" id="inicio">
+    <aside class="sidebar">
+      <div class="side-heading">ÍNDICE DEL SISTEMA</div>
+      <nav aria-label="Navegación principal"><a href="#inicio" class="active">00 <span>Inicio</span> ↗</a><a href="#expedientes">01 <span>Expedientes</span> 03</a><button class="nav-secret" data-secret>02 <span>Archivo 013</span> ▶</button><a href="#acceso">03 <span>Punto de encuentro</span> ↗</a></nav>
+      <div class="side-note"><p class="red">NO LOS CONTACTES.</p></div>
+      <div class="session"><span class="tiny">ESTADO DE LA SESIÓN</span><p><span class="status-dot">●</span> <span id="visitors">1 visitante conectado</span></p><p>TIEMPO <span id="elapsed">00:00</span></p><p>SEÑAL <span id="signal">86%</span> <span class="bars">▂▄▆█</span></p><div class="controls"><button id="sound" aria-pressed="false">SONIDO: OFF</button><button id="effects" aria-pressed="true">EFECTOS: ON</button></div></div>
+      <div class="side-bottom">ÚLTIMA COPIA<br><span>31.OCT.1998 / 03:13 AM</span><div class="barcode" aria-hidden="true"></div><span>NO HAY COPIA DE SEGURIDAD.</span></div>
+    </aside>
+    <main>
+      <div class="breadcrumb"><span>RAÍZ / ARCHIVOS_RECUPERADOS / INICIO</span><span id="session-id">SESIÓN #000013</span></div>
+      <section class="hero" aria-labelledby="title"><div class="hero-copy"><p class="eyebrow"><span class="red-square"></span> DOCUMENTACIÓN NO AUTORIZADA</p><h1 id="title">REGISTRO<br>DE <span>AUSENTES</span><span class="cursor" aria-hidden="true">_</span></h1><p class="intro">Sus nombres están desapareciendo.</p><a class="primary" href="#expedientes">VER EXPEDIENTES <span>↘</span></a></div><button class="secret-entry" id="secret" data-secret aria-label="Abrir archivo 013"><span class="tiny">ARCHIVO RESTRINGIDO</span><strong>013</strong><span id="secret-status">NO LO ABRAS</span><span class="secret-open">ABRIR ARCHIVO ↗</span></button></section>
+      <div class="warning-strip"><span>! ADVERTENCIA</span><p id="warning-text">ALGUIEN MODIFICÓ EL ARCHIVO.</p><span class="warning-code">ERR_013</span></div>
+      <section id="expedientes" class="section"><div class="section-heading"><div><p class="eyebrow">01 / PERSONAS NO LOCALIZADAS</p><h2>¿LOS HAS VISTO?</h2></div><span class="tag">03 AUSENTES</span></div>
+      <div class="case-grid">
+        <button class="case-card" data-case="001"><div class="case-top"><span>EXP. 001</span><span>● AUSENTE</span></div><div class="portrait portrait-0" role="img" aria-label="Retrato ficticio de Lucía Mendoza"><span class="photo-corner">ARCHIVO / 1998</span></div><div class="case-body"><span class="tiny">ÚLTIMO REGISTRO: 28.OCT / 18:42</span><h3>LUCÍA MENDOZA</h3><p>Nunca salió.</p><span class="case-link">ABRIR EXPEDIENTE <b>↗</b></span></div></button>
+        <button class="case-card" data-case="002"><div class="case-top"><span>EXP. 002</span><span>● AUSENTE</span></div><div class="portrait portrait-1" role="img" aria-label="Retrato ficticio de Diego Salas"><span class="photo-corner">ARCHIVO / 1998</span></div><div class="case-body"><span class="tiny">ÚLTIMO REGISTRO: 29.OCT / 19:13</span><h3>DIEGO SALAS</h3><p>La cámara siguió grabando.</p><span class="case-link">ABRIR EXPEDIENTE <b>↗</b></span></div></button>
+        <button class="case-card" data-case="003"><div class="case-top"><span>EXP. 003</span><span>● AUSENTE</span></div><div class="portrait portrait-2" role="img" aria-label="Retrato ficticio de Inés Vidal"><span class="photo-corner">ARCHIVO / 1998</span></div><div class="case-body"><span class="tiny">ÚLTIMO REGISTRO: 30.OCT / 03:13</span><h3>INÉS VIDAL</h3><p>Todavía contesta presente.</p><span class="case-link">ABRIR EXPEDIENTE <b>↗</b></span></div></button>
+      </div><div class="archive-foot"><span>FIN DE LOS REGISTROS PÚBLICOS</span><button data-secret aria-label="Abrir archivo 013">ARCHIVO 013 ↗</button></div></section>
+      <section id="acceso" class="section event"><div><p class="eyebrow">03 / ENCUENTRO</p><h2>TODOS LLEGARON<br>AL MISMO LUGAR.</h2></div><div class="event-details"><span class="tag">CASA DEL TERROR / HALLOWEEN</span><dl><div><dt>FECHA</dt><dd id="event-date"></dd></div><div><dt>UBICACIÓN</dt><dd id="event-place"></dd></div><div><dt>ACCESO</dt><dd id="event-entry"></dd></div></dl></div></section>
+      <footer><span>REGISTRO DE AUSENTES © <span id="year">2026</span></span><p>Experiencia ficticia de Halloween · Proyecto escolar · Beta</p><button id="restart">REINICIAR SESIÓN ↻</button></footer>
+    </main>
+  </div>
+  <div id="intrusion" class="intrusion" hidden aria-hidden="true"><span>SESIÓN INTERVENIDA</span><p>ESTÁ<br>DETRÁS.</p><span>013 / 013 / 013</span></div>
+  <div id="notice" class="notice" hidden role="status"></div>
+  <dialog id="case-dialog" aria-labelledby="dialog-code"><div class="dialog-bar"><span id="dialog-code">EXPEDIENTE</span><button id="close-dialog" aria-label="Cerrar expediente">CERRAR [×]</button></div><div id="dialog-body"></div></dialog>
+  <dialog id="footage-dialog" aria-labelledby="footage-title"><div class="dialog-bar"><span id="footage-title">ARCHIVO 013 / GRABACIÓN RECUPERADA</span><button id="close-footage" aria-label="Cerrar grabación">CERRAR [×]</button></div><div class="footage-player"><div class="camera"><video id="real-video" hidden playsinline muted preload="metadata" aria-label="Video del archivo 013"></video><canvas id="camera" width="840" height="480" aria-label="Reconstrucción animada de una cámara de vigilancia en un pasillo"></canvas><span class="cam-label">ARCHIVO_013 / CAM_04</span><span class="cam-rec" id="cam-status">● SEÑAL PAUSADA</span><div class="cam-center" id="cam-message">FRAGMENTO RECUPERADO<span>00:12 / SIN AUDIO ORIGINAL</span></div><div class="tape-corruption" aria-hidden="true"><i></i><span>SEÑAL INTERVENIDA</span></div><span class="cam-time" id="cam-time">31/10/1998 — 03:13:00</span></div><div class="footage-controls"><button id="play" class="outline">▶ REPRODUCIR</button><p id="tape-caption" aria-live="polite">Mira la puerta.</p><span id="demo-label" class="tiny muted">SIMULACIÓN / 12 S</span></div></div></dialog>
+  <dialog id="takeover" aria-label="Señal perdida"><div class="hack-static" aria-hidden="true"></div><div id="hack-faces" class="hack-faces" aria-hidden="true"></div><div class="hack-terminal" aria-hidden="true">RDA://013<br>SESIÓN DUPLICADA<br>ARCHIVO CORRUPTO<br>NO HAY RESPUESTA<br>013 013 013 013<br>SESIÓN DUPLICADA<br>ARCHIVO CORRUPTO</div><div class="hack-center"><span>02:00 / CONEXIÓN PERDIDA</span><h2 data-echo="SAL DE AQUÍ">SAL DE AQUÍ</h2><p>Eres el siguiente...</p></div><div class="hack-bars" aria-hidden="true"></div></dialog>
+  <noscript><p class="noscript">Activa JavaScript para explorar los expedientes y reproducir la experiencia.</p></noscript>
+</body></html>
