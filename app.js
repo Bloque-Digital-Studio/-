@@ -3,7 +3,7 @@
   const $ = selector => document.querySelector(selector);
   const config = window.RDA_CONFIG;
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-  let effects = !reduced.matches, sound = false, audio = null, elapsed = 0;
+  let effects = !reduced.matches, sound = false, elapsed = 0;
   let lastTick = performance.now(), storyElapsed = 0, noticeTimer, glitchTimer, intrusionTimer;
   let playing = false, frame = 0, clipStart = 0;
   let severity = 0, nextPulse = 0, hijacked = false;
@@ -12,6 +12,21 @@
   const hasRealVideo = Boolean(config.video013);
   let clipPulse = -1;
   if (hasRealVideo) { realVideo.src = config.video013; realVideo.hidden = false; $('#camera').hidden = true; $('#demo-label').textContent = 'ARCHIVO ORIGINAL'; }
+  const radio = window.RDARadio;
+  let revealTimer, idleTimer, watcherTimer, opened = {}, previousTitle = document.title;
+  let visits = 1;
+  try { visits = Math.min(999, Number(sessionStorage.getItem('rda-visits') || 0) + 1); sessionStorage.setItem('rda-visits', String(visits)); } catch {}
+  if (visits > 1) { $('#return-message').textContent = 'VOLVISTE.'; $('.intro').textContent = 'Esta vez no abras la puerta.'; $('#session-id').textContent = 'RECONEXIÓN #' + String(visits).padStart(6, '0'); }
+  function activity() {
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => {
+      if (!effects || hijacked || document.hidden || dialog.open || footage.open) return;
+      $('#watcher').hidden = false; radio.knock();
+      $('#wire-message').textContent = '¿sigues ahí?';
+      watcherTimer = setTimeout(() => { $('#watcher').hidden = true; }, 2800);
+    }, 8500);
+  }
+  ['pointerdown', 'keydown', 'scroll'].forEach(name => document.addEventListener(name, activity, { passive: true }));
   const fired = new Set();
   const records = {
     '001': { name: 'Lucía Mendoza', image: 0, age: 21, date: '28 de octubre de 1998 / 18:42', place: 'Edificio B, segundo piso', object: 'Una libreta con trece páginas en blanco.', quote: 'Sus pasos subían y bajaban al mismo tiempo.', note: 'Se encontró su mochila dentro de un salón que llevaba nueve años cerrado.' },
@@ -29,24 +44,14 @@
     $('#notice').hidden = false;
     noticeTimer = setTimeout(() => { $('#notice').hidden = true; }, 5500);
   }
-  function tone(frequency = 65, duration = .3) {
-    if (!sound || !audio || document.hidden) return;
-    const oscillator = audio.createOscillator(), gain = audio.createGain();
-    oscillator.type = 'sine'; oscillator.frequency.value = frequency;
-    gain.gain.setValueAtTime(0, audio.currentTime);
-    gain.gain.linearRampToValueAtTime(.055, audio.currentTime + .04);
-    gain.gain.exponentialRampToValueAtTime(.001, audio.currentTime + duration);
-    oscillator.connect(gain); gain.connect(audio.destination);
-    oscillator.start(); oscillator.stop(audio.currentTime + duration);
-    oscillator.onended = () => { oscillator.disconnect(); gain.disconnect(); };
-  }
+  function tone() { radio.crackle(.65); }
   function glitch() {
     if (!effects || document.hidden) return;
     clearTimeout(glitchTimer);
     document.body.classList.remove('glitching');
     void document.body.offsetWidth;
     document.body.classList.add('glitching');
-    tone(53, .4);
+    tone(53, .4); radio.crackle(.7);
     glitchTimer = setTimeout(() => document.body.classList.remove('glitching'), 1200);
   }
   function refreshEffects() {
@@ -55,7 +60,7 @@
     $('#effects').textContent = `EFECTOS: ${effects ? 'ON' : 'OFF'}`;
     $('#effects').setAttribute('aria-pressed', String(effects));
     if (!effects && !hijacked) {
-      document.body.classList.remove('glitching', 'corrupted');
+      document.body.classList.remove('glitching', 'corrupted'); $('#watcher').hidden = true;
       $('#intrusion').hidden = true;
       clearTimeout(glitchTimer); clearTimeout(intrusionTimer);
       if (takeover.open) takeover.close();
@@ -68,16 +73,16 @@
   refreshEffects();
   $('#sound').addEventListener('click', async () => {
     if (hijacked) return;
+    const button = $('#sound'); button.disabled = true;
     try {
-      if (!sound) {
-        const Audio = window.AudioContext || window.webkitAudioContext;
-        if (!Audio) { toast('Este navegador no permite reproducir el sonido ambiental.'); return; }
-        audio ||= new Audio(); await audio.resume(); sound = true; tone(110, .2);
-      } else { sound = false; if (audio) await audio.suspend(); }
-      $('#sound').textContent = `SONIDO: ${sound ? 'ON' : 'OFF'}`;
-      $('#sound').setAttribute('aria-pressed', String(sound));
-    } catch { sound = false; toast('No se pudo activar el sonido en este navegador.'); }
+      await radio.setEnabled(!sound); sound = !sound;
+      button.textContent = 'SONIDO: ' + (sound ? 'ON' : 'OFF');
+      button.setAttribute('aria-pressed', String(sound));
+      realVideo.muted = !sound;
+    } catch { sound = false; toast('No se pudo abrir el canal de audio.'); }
+    finally { button.disabled = false; }
   });
+  $('#volume').addEventListener('input', event => radio.volume(Number(event.target.value) / 100));
 
   const dialog = $('#case-dialog');
   function openFile(id) {
@@ -85,7 +90,7 @@
     const record = records[id];
     if (!record) return;
     $('#dialog-code').textContent = `RDA / EXPEDIENTE ${id} / COPIA RECUPERADA`;
-    $('#dialog-body').innerHTML = `<div class="dossier"><div class="portrait portrait-${record.image}" role="img" aria-label="Retrato ficticio de ${record.name}"></div><div><span class="tiny red">AUSENTE / ${record.date}</span><h2>${record.name.toUpperCase()}</h2><dl><dt>ÚLTIMA UBICACIÓN</dt><dd id="last-location">${fired.has('ubicacion') ? 'AQUÍ.' : record.place}</dd><dt>EVIDENCIA</dt><dd>${record.object}</dd></dl></div></div><blockquote class="testimony">“${record.quote}”</blockquote><div class="dossier-actions"><button class="outline" id="report">LO VI</button></div><p class="tiny muted" style="margin:20px 0 0">Ficción · Halloween</p>`;
+    $('#dialog-body').innerHTML = `<div class="dossier"><div class="portrait portrait-${record.image}" role="img" aria-label="Retrato de ${record.name}"></div><div><span class="tiny red">AUSENTE / ${record.date}</span><h2>${record.name.toUpperCase()}</h2><dl><dt>ÚLTIMA UBICACIÓN</dt><dd id="last-location">${fired.has('ubicacion') ? 'AQUÍ.' : record.place}</dd><dt>EVIDENCIA</dt><dd>${record.object}</dd></dl></div></div><blockquote class="testimony">“${record.quote}”</blockquote><div class="dossier-actions"><button class="outline" id="report">LO VI</button></div><p class="tiny muted" style="margin:20px 0 0">COPIA RECUPERADA / INTEGRIDAD NO VERIFICADA</p>`;
     $('#report').addEventListener('click', event => {
       event.currentTarget.textContent = 'AVISTAMIENTO REGISTRADO';
       event.currentTarget.disabled = true;
@@ -94,6 +99,8 @@
       response.textContent = 'YA LO REPORTASTE. 03:13.';
       event.currentTarget.closest('.dossier-actions').after(response); glitch();
     });
+    opened[id] = (opened[id] || 0) + 1;
+    if (opened[id] > 1 && effects) { $('.testimony').textContent = '“No decía esto la última vez.”'; radio.knock(); }
     if (!dialog.open) dialog.showModal();
   }
   document.querySelectorAll('[data-case]').forEach(button => button.addEventListener('click', () => openFile(button.dataset.case)));
@@ -137,7 +144,7 @@
   }
   $('#hack-faces').append(faceFragment);
   function damage(level) {
-    severity = level; document.body.dataset.damage = String(level); glitch();
+    severity = level; document.body.dataset.damage = String(level); radio.damage(level); glitch();
   }
   // Final de la experiencia. Recargar o cerrar la pestaña sigue funcionando normalmente.
   takeover.addEventListener('cancel', event => event.preventDefault());
@@ -149,14 +156,19 @@
     clearTimeout(intrusionTimer); clearTimeout(noticeTimer);
     hijacked = true; damage(6); document.body.classList.add('hijacked');
     document.querySelectorAll('.shell, .systembar, .skip').forEach(element => { element.inert = true; });
-    sound = false; if (audio) audio.suspend().catch(() => {});
+    clearTimeout(idleTimer); clearTimeout(watcherTimer); $('#watcher').hidden = true;
+    radio.damage(6);
+    revealTimer = setTimeout(() => {
+      $('#event-reveal').hidden = false; takeover.classList.add('revealed');
+      sound = false; radio.setEnabled(false).catch(() => {});
+    }, 8000);
     $('#signal').textContent = '0%';
     if (!takeover.open) takeover.showModal();
   }
   const actions = {
-    primeraFalla() { damage(1); $('#warning-text').textContent = 'ARCHIVO ALTERADO.'; document.body.classList.add('corrupted'); $('#signal').textContent = '71%'; },
-    segundoVisitante() { damage(2); $('#visitors').textContent = '2 visitantes conectados'; toast('NO ESTÁS SOLO.'); tone(80, .6); $('#signal').textContent = '53%'; },
-    ubicacion() { damage(3); if ($('#last-location')) $('#last-location').textContent = 'AQUÍ.'; $('#warning-text').textContent = 'TE ENCONTRÓ.'; $('#signal').textContent = '31%'; },
+    primeraFalla() { damage(1); $('#warning-text').textContent = 'ARCHIVO ALTERADO.'; document.body.classList.add('corrupted'); $('#signal').textContent = '71%'; $('#wire-message').textContent = 'respuesta recibida: no deberías tener esta copia.'; },
+    segundoVisitante() { damage(2); $('#visitors').textContent = '2 visitantes conectados'; toast('NO ESTÁS SOLO.'); tone(80, .6); $('#signal').textContent = '53%'; $('#wire-message').textContent = 'alguien está leyendo contigo.'; radio.knock(); },
+    ubicacion() { damage(3); if ($('#last-location')) $('#last-location').textContent = 'AQUÍ.'; $('#warning-text').textContent = 'TE ENCONTRÓ.'; $('#signal').textContent = '31%'; $('#wire-message').textContent = 'registro 004: reservado.'; $('.case-grid').classList.add('reserved'); },
     interferencia() { damage(4); $('#intrusion').hidden = false; tone(45, 1); intrusionTimer = setTimeout(() => { $('#intrusion').hidden = true; }, 3600); $('#signal').textContent = '13%'; },
     archivo013() { damage(4); $('#secret-status').textContent = 'TE ESTÁ ESPERANDO'; toast('013 ESTÁ ABIERTO.'); $('#warning-text').textContent = 'ADMINISTRADOR DESCONECTADO.'; },
     colapso() { damage(5); $('#warning-text').textContent = 'SAL. AHORA.'; $('#signal').textContent = '1%'; toast('NO QUEDA TIEMPO.'); },
@@ -178,11 +190,13 @@
   }, 250);
   document.addEventListener('visibilitychange', () => {
     lastTick = performance.now();
-    if (document.hidden) { $('#intrusion').hidden = true; if (playing) stopClip(); }
+    if (document.hidden) { document.title = 'NO TE FUISTE SOLO.'; $('#intrusion').hidden = true; $('#watcher').hidden = true; if (playing) stopClip(); }
+    else { document.title = previousTitle; if (effects && !hijacked) { $('#wire-message').textContent = 'la puerta se abrió mientras no estabas.'; radio.knock(); activity(); } }
   });
   $('#restart').addEventListener('click', () => {
     if (hijacked) return;
     if (footage.open) footage.close();
+    clearTimeout(revealTimer); clearTimeout(idleTimer); clearTimeout(watcherTimer); $('#watcher').hidden = true; $('#event-reveal').hidden = true; takeover.classList.remove('revealed'); $('.case-grid').classList.remove('reserved'); opened = {}; $('#wire-message').textContent = 'esperando respuesta del otro lado_'; radio.damage(0); activity();
     elapsed = 0; storyElapsed = 0; severity = 0; nextPulse = 0; hijacked = false; lastTick = performance.now(); fired.clear();
     document.body.dataset.damage = '0'; document.body.classList.remove('hijacked');
     if (takeover.open) takeover.close();
@@ -270,7 +284,7 @@
   realVideo.addEventListener('ended', () => { stopClip(true); $('#tape-caption').textContent = 'FIN DEL ARCHIVO.'; });
   realVideo.addEventListener('error', () => { stopClip(); $('#tape-caption').textContent = 'No se pudo abrir el video. Revisa video013 en config.js.'; });
   $('#play').addEventListener('click', startClip);
-  drawCamera();
+  drawCamera(); activity();
   document.querySelectorAll('nav a').forEach(link => link.addEventListener('click', () => {
     document.querySelectorAll('nav a').forEach(item => item.classList.remove('active'));link.classList.add('active');
   }));
@@ -278,3 +292,4 @@
   if (deepLink) openFile(deepLink[1]);
   if (location.hash === '#exp-013') openRecording();
 })();
+

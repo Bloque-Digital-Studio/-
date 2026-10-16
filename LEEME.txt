@@ -1,53 +1,48 @@
-REGISTRO DE AUSENTES — BETA 0.3
+REGISTRO DE AUSENTES — BETA 0.4
 ================================
 
 ABRIR
-Haz doble clic en index.html. Funciona sin internet y sin instalar programas.
-Conserva todos los archivos y la carpeta assets juntos.
+Doble clic en index.html. Conserva todos los archivos y assets juntos.
+Funciona sin internet. Esta carpeta es una experiencia ficticia de Halloween.
 
-CAMBIOS
-- Archivo 013 abre directamente la grabación y empieza a reproducirla.
-- Demo de vigilancia animada de 12 segundos con interferencias.
-  Es una reconstrucción local en canvas, no una cámara real ni un video filmado.
-- A los 120 segundos de pestaña activa con efectos: toma total de la pantalla.
-- 36 fotografías en movimiento, repitiendo los tres retratos de prueba.
-- SAL DE AQUÍ / Eres el siguiente...
-- El final no tiene botones y Escape no lo cierra. El resto del sitio queda inactivo.
-  Para volver al inicio, recarga o cierra y vuelve a abrir la página.
+NOVEDADES
+- Radio dañada continua al activar SONIDO: estática, zumbido y golpes estéreo.
+- GANANCIA ajusta el volumen; la pequeña barra mide la señal generada.
+- Audio apagado al inicio y suspendido cuando ocultas la pestaña.
+- Expedientes que cambian cuando se vuelven a abrir.
+- Presencia fugaz tras 8.5 segundos sin clics, teclas ni desplazamiento.
+- Nuevo registro 004 a los 35 segundos. Mensajes al volver a la pestaña.
+- Las recargas recuerdan la visita en esta sesión del navegador, si permite almacenamiento.
+- La portada y la grabación ya no anuncian escuela, simulación ni ficción.
+- Hackeo a los 90 segundos con efectos encendidos y pestaña activa.
+- A los 8 segundos del hackeo aparece la invitación a la CASA DEL TERROR.
+  El audio se apaga en ese momento. El resto del sitio sigue inaccesible.
+- Para volver al inicio, recarga o cierra y vuelve a abrir la página.
 
 PROBAR
-1. Pulsa el 013 de la portada. Mira la puerta durante los 12 segundos del fragmento.
-2. Cierra la grabación o vuelve a reproducirla.
-3. Permanece en la pestaña con efectos encendidos durante dos minutos.
-4. En el final, recarga la página para empezar de nuevo.
-El reloj se pausa si cambias de pestaña. Antes del final, Escape cierra los diálogos.
-Apagar efectos pausa el avance de las interferencias. El reloj de sesión continúa.
-Si tu sistema tiene movimiento reducido, los efectos empiezan apagados.
-El sonido empieza apagado. El final detiene cualquier reproducción de audio.
-
-AGREGAR SUS FOTOS
-Guarda las fotos en assets. En config.js agrega entradas a la lista caras:
-  { src: 'assets/cara-04.jpg' }
-Se alternarán automáticamente entre los 36 retratos del final.
-Las tres entradas actuales recortan partes de la lámina assets/retratos.png.
-
-PONER SU VIDEO EN EL 013
-Guarda su video como assets/archivo-013.mp4.
-En config.js cambia video013 a 'assets/archivo-013.mp4'.
-Al dejar video013 vacío se utiliza la simulación de prueba.
-Los efectos de interferencia también se aplican al video que agreguen.
+Activa SONIDO y ajusta GANANCIA. Abre un expediente dos veces.
+Abre 013 para ver la grabación; también funciona con sonido apagado.
+Deja la página sin interacción para ver una presencia a un lado.
+Tras 1:30 aparece el final; 8 segundos después, la invitación.
+Escape cierra expedientes y video antes del final; no cierra el hackeo.
+Apagar efectos pausa la historia. El movimiento reducido los apaga inicialmente.
 
 PERSONALIZAR
-config.js: evento, fotos, video y tiempos de las anomalías (hackeo: 120).
-index.html: portada y tarjetas. app.js: expedientes y simulación del pasillo.
-styles.css: diseño y efectos. assets/static.svg: textura de interferencia.
+config.js: evento, caras, video y tiempos. El evento aparece solo en el final.
+Pon las fotos en assets y agrega a caras: { src: 'assets/cara-04.jpg' }.
+Se repiten automáticamente entre los 36 retratos del final.
+Guarda su corto como assets/archivo-013.mp4 y cambia video013 a esa ruta.
+Vacío utiliza la animación de vigilancia de 12 segundos hecha en canvas.
+ambience.js: síntesis local de radio, ruido y golpes. No usa micrófono.
+index.html: portada. app.js: historia. styles.css: apariencia y animaciones.
 Enlaces directos: index.html#exp-001, #exp-002, #exp-003 y #exp-013.
 
-Los datos reales del evento siguen pendientes. Los personajes son ficticios adultos.
-Retratos generados con image_gen; prompt en PROMPT-IMAGEN.txt.
-Los efectos no acceden a cámara, micrófono, ubicación ni archivos del visitante.
-Sin librerías, fuentes externas, cuentas ni claves.
+Los retratos son personajes ficticios adultos generados con image_gen.
+El prompt original está en PROMPT-IMAGEN.txt. Los datos del evento están pendientes.
+No se leen cámaras, micrófonos, ubicación, archivos ni datos personales.
+El contador de visitas se guarda únicamente en sessionStorage del navegador.
+Sin librerías, cuentas ni claves. La ambientación no representa una intrusión real.
 
 COMPARTIR
-Envía toda la carpeta o el ZIP. Un enlace público y los códigos QR requieren
-alojarla después en un servicio web. Esta entrega es local.
+Envía toda la carpeta o el ZIP. Para tener un enlace público y códigos QR,
+será necesario alojar la página después. Esta entrega es local.

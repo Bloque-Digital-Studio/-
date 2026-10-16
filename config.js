@@ -9,5 +9,5 @@ window.RDA_CONFIG = {
     { src: 'assets/retratos.png', posicion: '50% 50%', tamano: '300% 100%' },
     { src: 'assets/retratos.png', posicion: '100% 50%', tamano: '300% 100%' }
   ],
-  tiempos: { primeraFalla: 12, segundoVisitante: 30, ubicacion: 55, interferencia: 75, archivo013: 95, colapso: 110, hackeo: 120 }
+  tiempos: { primeraFalla: 8, segundoVisitante: 20, ubicacion: 35, interferencia: 50, archivo013: 65, colapso: 78, hackeo: 90 }
 };
