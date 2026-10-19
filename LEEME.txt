@@ -1,48 +1,23 @@
-REGISTRO DE AUSENTES — BETA 0.4
-================================
+REGISTRO DE AUSENTES — BETA 0.5.1
 
-ABRIR
-Doble clic en index.html. Conserva todos los archivos y assets juntos.
-Funciona sin internet. Esta carpeta es una experiencia ficticia de Halloween.
+Abre index.html. Mantén todos los archivos y assets juntos.
 
-NOVEDADES
-- Radio dañada continua al activar SONIDO: estática, zumbido y golpes estéreo.
-- GANANCIA ajusta el volumen; la pequeña barra mide la señal generada.
-- Audio apagado al inicio y suspendido cuando ocultas la pestaña.
-- Expedientes que cambian cuando se vuelven a abrir.
-- Presencia fugaz tras 8.5 segundos sin clics, teclas ni desplazamiento.
-- Nuevo registro 004 a los 35 segundos. Mensajes al volver a la pestaña.
-- Las recargas recuerdan la visita en esta sesión del navegador, si permite almacenamiento.
-- La portada y la grabación ya no anuncian escuela, simulación ni ficción.
-- Hackeo a los 90 segundos con efectos encendidos y pestaña activa.
-- A los 8 segundos del hackeo aparece la invitación a la CASA DEL TERROR.
-  El audio se apaga en ese momento. El resto del sitio sigue inaccesible.
-- Para volver al inicio, recarga o cierra y vuelve a abrir la página.
+CORRECCIÓN
+Cuatro imágenes completas: Foto-1.jpeg, Foto-2.jpeg, Foto-3.jpeg y Foto-4.jpeg.
+Un expediente por periódico, con su cabecera, fotografías y todo el texto original.
+No se recortan los retratos ni se ocultan los nombres impresos en las imágenes.
+Al pulsar un periódico se abre completo, ampliado; debajo están ubicación,
+vestimenta y detalles correspondientes a las dos personas de esa página.
+La portada no añade nombres fuera del texto que ya está impreso en el periódico.
+Las imágenes completas también se alternan en el final.
 
-PROBAR
-Activa SONIDO y ajusta GANANCIA. Abre un expediente dos veces.
-Abre 013 para ver la grabación; también funciona con sonido apagado.
-Deja la página sin interacción para ver una presencia a un lado.
-Tras 1:30 aparece el final; 8 segundos después, la invitación.
-Escape cierra expedientes y video antes del final; no cierra el hackeo.
-Apagar efectos pausa la historia. El movimiento reducido los apaga inicialmente.
+Hackeo a los 60 segundos de pestaña activa con efectos encendidos.
+El final no muestra escuela, evento, fecha ni invitación. Recarga para reiniciar.
+Archivo 013 vacío, sin video ni controles de reproducción.
+Se conservan radio, interferencias y mecánicas de la versión anterior.
 
-PERSONALIZAR
-config.js: evento, caras, video y tiempos. El evento aparece solo en el final.
-Pon las fotos en assets y agrega a caras: { src: 'assets/cara-04.jpg' }.
-Se repiten automáticamente entre los 36 retratos del final.
-Guarda su corto como assets/archivo-013.mp4 y cambia video013 a esa ruta.
-Vacío utiliza la animación de vigilancia de 12 segundos hecha en canvas.
-ambience.js: síntesis local de radio, ruido y golpes. No usa micrófono.
-index.html: portada. app.js: historia. styles.css: apariencia y animaciones.
-Enlaces directos: index.html#exp-001, #exp-002, #exp-003 y #exp-013.
-
-Los retratos son personajes ficticios adultos generados con image_gen.
-El prompt original está en PROMPT-IMAGEN.txt. Los datos del evento están pendientes.
-No se leen cámaras, micrófonos, ubicación, archivos ni datos personales.
-El contador de visitas se guarda únicamente en sessionStorage del navegador.
-Sin librerías, cuentas ni claves. La ambientación no representa una intrusión real.
-
-COMPARTIR
-Envía toda la carpeta o el ZIP. Para tener un enlace público y códigos QR,
-será necesario alojar la página después. Esta entrega es local.
+config.js contiene los cuatro expedientes y sus datos.
+Enlaces: #exp-001, #exp-002, #exp-003, #exp-004 y #exp-013.
+Los originales se conservan intactos en assets/foto-1.jpeg hasta foto-4.jpeg.
+Esta es una experiencia ficticia local. No usa cámara, micrófono ni ubicación.
+Para compartir, envía toda la carpeta o el ZIP.
