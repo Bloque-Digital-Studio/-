@@ -9,6 +9,12 @@
   const takeover = $('#takeover');
   const footage = $('#footage-dialog');
   const radio = window.RDARadio;
+  const video = $('#archive-video');
+  video.src = config.video013; video.muted = false; video.volume = .85;
+  let videoEngaged = false, soundWanted = true, soundRequest = 0;
+  $('#event-place').textContent = config.evento.lugar;
+  $('#event-date').textContent = config.evento.fecha;
+  $('#event-message').textContent = config.evento.mensaje;
   let audioStopTimer, idleTimer, watcherTimer, opened = {}, previousTitle = document.title;
   let visits = 1;
   try { visits = Math.min(999, Number(sessionStorage.getItem('rda-visits') || 0) + 1); sessionStorage.setItem('rda-visits', String(visits)); } catch {}
@@ -74,16 +80,26 @@
   $('#effects').addEventListener('click', () => { if (hijacked) return; effects = !effects; refreshEffects(); });
   reduced.addEventListener('change', event => { if (event.matches) { effects = false; refreshEffects(); } });
   refreshEffects();
-  $('#sound').addEventListener('click', async () => {
-    if (hijacked) return;
-    const button = $('#sound'); button.disabled = true;
+  async function syncSound() {
+    const request = ++soundRequest;
     try {
-      await radio.setEnabled(!sound); sound = !sound;
-      button.textContent = 'SONIDO: ' + (sound ? 'ON' : 'OFF');
-      button.setAttribute('aria-pressed', String(sound));
-    } catch { sound = false; toast('No se pudo abrir el canal de audio.'); }
-    finally { button.disabled = false; }
+      await radio.setEnabled(soundWanted && !hijacked);
+      if (request !== soundRequest) return;
+      sound = soundWanted && !hijacked;
+      $('#sound').textContent = 'SONIDO: ' + (sound ? 'ON' : 'OFF');
+      $('#sound').setAttribute('aria-pressed', String(sound));
+    } catch { if (request === soundRequest) { sound = false; $('#sound').textContent = soundWanted ? 'SONIDO: AUTO' : 'SONIDO: OFF'; } }
+  }
+  $('#sound').addEventListener('click', () => {
+    if (hijacked) return;
+    soundWanted = !soundWanted; syncSound();
   });
+  function unlockSound(event) {
+    if (!hijacked && soundWanted && !sound && !event.target.closest('#sound')) syncSound();
+  }
+  document.addEventListener('pointerdown', unlockSound);
+  document.addEventListener('keydown', unlockSound);
+  syncSound();
   $('#volume').addEventListener('input', event => radio.volume(Number(event.target.value) / 100));
 
   const dialog = $('#case-dialog');
@@ -91,6 +107,13 @@
     if (hijacked) return;
     const record = records[id];
     if (!record) return;
+    if (record.soloPeriodico) {
+      $('#dialog-code').textContent = 'RDA / PERIÓDICO ' + id;
+      $('#dialog-body').innerHTML = '<div class="evidence-photo dossier-photo" role="img" aria-label="Periódico completo"></div>';
+      paintPhoto($('.dossier-photo'), record);
+      if (!dialog.open) dialog.showModal();
+      return;
+    }
     $('#dialog-code').textContent = `RDA / EXPEDIENTE ${id} / COPIA RECUPERADA`;
     $('#dialog-body').innerHTML = `<div class="dossier"><div class="evidence-photo dossier-photo" role="img" aria-label="Periódico del expediente ${id}"></div><div><span class="tiny red">ÚLTIMO REGISTRO / ${record.date}</span><h2>EXPEDIENTE ${id}</h2><dl><dt>ÚLTIMA UBICACIÓN</dt><dd id="last-location">${fired.has('ubicacion') ? 'AQUÍ.' : record.place}</dd><dt>VESTIMENTA VISIBLE</dt><dd>${record.clothes}</dd><dt>DETALLES DEL REGISTRO</dt><dd>${record.details}</dd></dl></div></div><blockquote class="testimony">${record.quote}</blockquote><div class="dossier-actions"><button class="outline" id="report">LO VI</button></div>`;
     paintPhoto($('.dossier-photo'), record);
@@ -117,11 +140,31 @@
     if (hijacked) return;
     if (dialog.open) dialog.close();
     if (!footage.open) footage.showModal();
-    glitch();
+    playRecording(); glitch();
   }
   document.querySelectorAll('[data-secret]').forEach(button => button.addEventListener('click', openRecording));
   $('#close-footage').addEventListener('click', () => footage.close());
-  // Cuatro periódicos completos alternados entre las 36 fotografías del final.
+  function setVideoEngaged(value) {
+    videoEngaged = value; lastTick = performance.now(); radio.duck(value);
+    $('#video-status').textContent = value ? 'REPRODUCIENDO / SESIÓN EN PAUSA' : video.ended ? 'FIN DE LA GRABACIÓN / SESIÓN REANUDADA' : 'SEÑAL PAUSADA / SESIÓN REANUDADA';
+  }
+  function playRecording() {
+    if (hijacked || !footage.open) return;
+    if (video.ended) video.currentTime = 0;
+    $('#video-start').hidden = true;
+    video.play().catch(error => {
+      if (error.name === 'AbortError') return;
+      setVideoEngaged(false); $('#video-start').hidden = false;
+      $('#video-status').textContent = 'PULSA REPRODUCIR PARA ABRIR EL CANAL';
+    });
+  }
+  video.addEventListener('play', () => setVideoEngaged(true));
+  video.addEventListener('pause', () => setVideoEngaged(false));
+  video.addEventListener('ended', () => setVideoEngaged(false));
+  video.addEventListener('error', () => { setVideoEngaged(false); $('#video-status').textContent = 'NO SE PUDO ABRIR LA GRABACIÓN'; });
+  $('#video-start').addEventListener('click', playRecording);
+  footage.addEventListener('close', () => { video.pause(); setVideoEngaged(false); });
+  // Seis periódicos completos alternados entre las 36 fotografías del final.
   const faces = config.expedientes;
   const faceFragment = document.createDocumentFragment();
   for (let index = 0; index < 36; index++) {
@@ -162,7 +205,8 @@
     clearTimeout(idleTimer); clearTimeout(watcherTimer); $('#watcher').hidden = true;
     radio.damage(6);
     audioStopTimer = setTimeout(() => {
-      sound = false; radio.setEnabled(false).catch(() => {});
+      $('#event-reveal').hidden = false; takeover.classList.add('revealed');
+      soundWanted = false; ++soundRequest; sound = false; radio.setEnabled(false).catch(() => {});
     }, 8000);
     $('#signal').textContent = '0%';
     if (!takeover.open) takeover.showModal();
@@ -170,7 +214,7 @@
   const actions = {
     primeraFalla() { damage(1); $('#warning-text').textContent = 'ARCHIVO ALTERADO.'; document.body.classList.add('corrupted'); $('#signal').textContent = '71%'; $('#wire-message').textContent = 'respuesta recibida: no deberías tener esta copia.'; },
     segundoVisitante() { damage(2); $('#visitors').textContent = '2 visitantes conectados'; toast('NO ESTÁS SOLO.'); tone(80, .6); $('#signal').textContent = '53%'; $('#wire-message').textContent = 'alguien está leyendo contigo.'; radio.knock(); },
-    ubicacion() { damage(3); if ($('#last-location')) $('#last-location').textContent = 'AQUÍ.'; $('#warning-text').textContent = 'TE ENCONTRÓ.'; $('#signal').textContent = '31%'; $('#wire-message').textContent = 'registro 005: reservado.'; $('.case-grid').classList.add('reserved'); },
+    ubicacion() { damage(3); if ($('#last-location')) $('#last-location').textContent = 'AQUÍ.'; $('#warning-text').textContent = 'TE ENCONTRÓ.'; $('#signal').textContent = '31%'; $('#wire-message').textContent = 'registro 007: reservado.'; $('.case-grid').classList.add('reserved'); },
     interferencia() { damage(4); $('#intrusion').hidden = false; tone(45, 1); intrusionTimer = setTimeout(() => { $('#intrusion').hidden = true; }, 3600); $('#signal').textContent = '13%'; },
     archivo013() { damage(4); $('#secret-status').textContent = 'TE ESTÁ ESPERANDO'; toast('013 ESTÁ ABIERTO.'); $('#warning-text').textContent = 'ADMINISTRADOR DESCONECTADO.'; },
     colapso() { damage(5); $('#warning-text').textContent = 'SAL. AHORA.'; $('#signal').textContent = '1%'; toast('NO QUEDA TIEMPO.'); },
@@ -178,7 +222,7 @@
   };
   setInterval(() => {
     const now = performance.now(), delta = (now - lastTick) / 1000; lastTick = now;
-    if (document.hidden) return;
+    if (document.hidden || videoEngaged) return;
     elapsed += Math.min(delta, 2);
     const seconds = Math.floor(elapsed);
     $('#elapsed').textContent = `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
@@ -192,12 +236,13 @@
   }, 250);
   document.addEventListener('visibilitychange', () => {
     lastTick = performance.now();
-    if (document.hidden) { document.title = 'NO TE FUISTE SOLO.'; $('#intrusion').hidden = true; $('#watcher').hidden = true; }
+    if (document.hidden) { video.pause(); document.title = 'NO TE FUISTE SOLO.'; $('#intrusion').hidden = true; $('#watcher').hidden = true; }
     else { document.title = previousTitle; if (effects && !hijacked) { $('#wire-message').textContent = 'la puerta se abrió mientras no estabas.'; radio.knock(); activity(); } }
   });
   $('#restart').addEventListener('click', () => {
     if (hijacked) return;
     if (footage.open) footage.close();
+    $('#event-reveal').hidden = true; takeover.classList.remove('revealed');
     clearTimeout(audioStopTimer); clearTimeout(idleTimer); clearTimeout(watcherTimer); $('#watcher').hidden = true; $('.case-grid').classList.remove('reserved'); opened = {}; $('#wire-message').textContent = 'esperando respuesta del otro lado_'; radio.damage(0); activity();
     elapsed = 0; storyElapsed = 0; severity = 0; nextPulse = 0; hijacked = false; lastTick = performance.now(); fired.clear();
     document.body.dataset.damage = '0'; document.body.classList.remove('hijacked');
@@ -216,7 +261,7 @@
   document.querySelectorAll('nav a').forEach(link => link.addEventListener('click', () => {
     document.querySelectorAll('nav a').forEach(item => item.classList.remove('active'));link.classList.add('active');
   }));
-  const deepLink = location.hash.match(/^#exp-(00[1-4])$/);
+  const deepLink = location.hash.match(/^#exp-(00[1-6])$/);
   if (deepLink) openFile(deepLink[1]);
   if (location.hash === '#exp-013') openRecording();
 })();

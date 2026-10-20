@@ -1,4 +1,4 @@
-// Cuatro periódicos completos, sin recortar sus fotografías ni su texto.
+// Periódicos completos y grabación del archivo 013.
 window.RDA_CONFIG = {
   "anio": 2026,
   "expedientes": [
@@ -49,6 +49,22 @@ window.RDA_CONFIG = {
       "clothes": "Izquierda: Chamarra de mezclilla sobre camisa a cuadros. Derecha: Chamarra de mezclilla sobre blusa clara.",
       "details": "Izquierda: Cabello corto. Calzado sin registro. Derecha: Cabello largo. Calzado sin registro.",
       "quote": "Salió de su domicilio y no regresó."
+    },
+    {
+      "id": "005",
+      "src": "assets/foto-5.jpeg",
+      "posicion": "center",
+      "tamano": "contain",
+      "ratio": 0.66640625,
+      "soloPeriodico": true
+    },
+    {
+      "id": "006",
+      "src": "assets/foto-6.jpeg",
+      "posicion": "center",
+      "tamano": "contain",
+      "ratio": 0.7734375,
+      "soloPeriodico": true
     }
   ],
   "tiempos": {
@@ -59,5 +75,11 @@ window.RDA_CONFIG = {
     "archivo013": 43,
     "colapso": 52,
     "hackeo": 60
+  },
+  "video013": "assets/333.mp4",
+  "evento": {
+    "fecha": "29-10-2026",
+    "lugar": "Instituto Edunova",
+    "mensaje": "Próximamente..."
   }
 };

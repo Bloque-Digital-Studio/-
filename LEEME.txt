@@ -1,23 +1,40 @@
-REGISTRO DE AUSENTES — BETA 0.5.1
+REGISTRO DE AUSENTES — BETA 0.6
+================================
 
-Abre index.html. Mantén todos los archivos y assets juntos.
+ABRIR
+Doble clic en index.html. Mantén todos los archivos y assets juntos.
 
-CORRECCIÓN
-Cuatro imágenes completas: Foto-1.jpeg, Foto-2.jpeg, Foto-3.jpeg y Foto-4.jpeg.
-Un expediente por periódico, con su cabecera, fotografías y todo el texto original.
-No se recortan los retratos ni se ocultan los nombres impresos en las imágenes.
-Al pulsar un periódico se abre completo, ampliado; debajo están ubicación,
-vestimenta y detalles correspondientes a las dos personas de esa página.
-La portada no añade nombres fuera del texto que ya está impreso en el periódico.
-Las imágenes completas también se alternan en el final.
+NOVEDADES
+- Archivo 013 reproduce assets/333.mp4 (el video proporcionado, sin modificar).
+- Al abrir el 013, el video intenta reproducirse con su audio activado.
+- El reloj y la historia se pausan durante la reproducción, incluso si carga datos.
+- Al pausar, terminar o cerrar el video, la sesión continúa desde donde iba.
+- Al ocultar la pestaña, el video se pausa.
+- La radio ambiental baja de volumen mientras se reproduce el video.
+- Sonido ambiental automático: intenta arrancar al entrar y, si el navegador
+  bloquea el audio automático, vuelve a intentarlo con el primer clic o tecla.
+  No requiere pulsar el botón de sonido. El botón permite silenciar voluntariamente.
+- Los controles nativos del video permiten pausa, volumen, silencio y pantalla completa.
+- Foto-5.jpeg y Foto-6.jpeg se muestran completas, sin ficha, fecha, ubicación ni ropa.
+  El texto original impreso en los periódicos se conserva.
+- Seis periódicos completos en total, sin recortar ninguna imagen.
+- Hackeo al minuto de tiempo activo (sin contar reproducción del video).
+- Ocho segundos después aparece: Instituto Edunova / 29-10-2026 / Próximamente...
+- El final sigue sin botón para cerrarlo. Recarga la página para reiniciar.
 
-Hackeo a los 60 segundos de pestaña activa con efectos encendidos.
-El final no muestra escuela, evento, fecha ni invitación. Recarga para reiniciar.
-Archivo 013 vacío, sin video ni controles de reproducción.
-Se conservan radio, interferencias y mecánicas de la versión anterior.
+PERSONALIZAR
+config.js: expedientes, ruta del video, anuncio final y tiempos.
+soloPeriodico: true muestra únicamente la imagen al abrir una entrada.
+assets/333.mp4 es una copia intacta del original en Downloads.
+assets/foto-1.jpeg hasta foto-6.jpeg son las imágenes completas.
+Enlaces directos: #exp-001 hasta #exp-006 y #exp-013.
 
-config.js contiene los cuatro expedientes y sus datos.
-Enlaces: #exp-001, #exp-002, #exp-003, #exp-004 y #exp-013.
-Los originales se conservan intactos en assets/foto-1.jpeg hasta foto-4.jpeg.
-Esta es una experiencia ficticia local. No usa cámara, micrófono ni ubicación.
-Para compartir, envía toda la carpeta o el ZIP.
+SONIDO
+El navegador y el volumen del dispositivo determinan si se oye la reproducción.
+La página respeta las restricciones de reproducción automática del navegador.
+Si el video no arranca automáticamente, aparece REPRODUCIR CON SONIDO.
+La radio se apaga ocho segundos después del hackeo; la pestaña oculta suspende el audio.
+
+COMPARTIR
+Envía toda la carpeta o el ZIP. Esta entrega sigue siendo local.
+Experiencia ficticia; no accede a cámara, micrófono, ubicación ni archivos del visitante.
